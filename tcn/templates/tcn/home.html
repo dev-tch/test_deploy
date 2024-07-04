@@ -1,0 +1,372 @@
+{% extends "tcn/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+{% if not user.is_authenticated %}
+    <h1>Welcome to TicketCounterNotify please login or signup</h1>
+    <div id="carouselExampleIndicators" class="carousel slide">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'tcn/images/ticketcounter.PNG' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-caption d-none d-md-block text-bg-dark p-3">
+            <h5>track office counter </h5>
+            <p>don't waste your time and get real time notification about the current counter</p>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'tcn/images/search_office.PNG' %}" class="d-block w-100" alt="search add office">
+            <div class="carousel-caption d-none d-md-block text-bg-dark p-3">
+                <h5>search office </h5>
+                <p>Search for an office and select it to display in your tracked offices</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'tcn/images/office.PNG' %}" class="d-block w-100" alt="create office with agents">
+            <div class="carousel-caption d-none d-md-block text-bg-dark p-3">
+                <h5>Create Office with Agents</h5>
+                <p>Manage your office and agents efficiently with our system.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'tcn/images/window.PNG' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block text-bg-dark p-3">
+                <h5>Track the productivity of office agents </h5>
+                <p>view number of tickets served by each window</p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+{% endif %}
+
+{% if user.is_authenticated and user.role == 'agent' %}
+    <!-- 
+    ======================================================================
+    start Dynamic oontent for user agent 
+    ======================================================================
+    -->
+    <p class="text-success bg-dark text-center">
+        Congratulations, agent! You have successfully joined TicketCounterNotify. 
+    </p>
+    
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-6 ">
+                <h2>Your Office Reference : {{ agent_office.ref }}</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            <button 
+            id = "agentinc"
+            data-agent-id   = "{{ agent_user.id}}"
+            data-office-id  = "{{ agent_office.ref }}"
+            data-window-num = "{{ agent_window.number_window }}"
+            onclick="incrementCounter(this)">Increment Counter
+            </button>
+            </div>
+            <div class="col-sm">
+            <h1 id = "counter-display-agent" style="background-color:powderblue; text-align: center;">{{agent_office.counter}}</h1>
+            </div>
+        </div>
+        <br>
+        <h2> config key combination to increment</h2>
+        <div class="container">
+            <!-- Row 1 -->
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <select class="form-select" aria-label="Default select example" id="combselct1">
+                        <option selected>Key combination one</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1">
+                        <label class="form-check-label" for="flexCheckChecked1">
+                            Check box to use this key
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <select class="form-select" aria-label="Default select example" id="combselct2">
+                        <option selected>Key combination two</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2">
+                        <label class="form-check-label" for="flexCheckChecked2">
+                            Check box to use this key
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <select class="form-select" aria-label="Default select example" id="combselct3">
+                        <option selected>Key combination three</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked3">
+                        <label class="form-check-label" for="flexCheckChecked3">
+                            Check box to use this key
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>                   
+    </div>
+
+    <!-- 
+    ======================================================================
+    End Dynamic content for user agent 
+    ======================================================================
+    -->
+{% endif %}
+
+
+{% if user.is_authenticated and user.role == 'client' %}
+    <!-- 
+    ======================================================================
+    start Dynamic  content for user client
+    ======================================================================
+    -->
+    <p class="text-success bg-dark text-center">
+        Congratulations, client! You have successfully joined TicketCounterNotify.
+    </p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dialog-enable-notifications"
+    id ="btn-track-offices"
+    >
+    track offices 
+    </button>
+    <!-- start datatable -->
+    <table id="offices" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Name</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>Region</th>
+                <th>Address</th>
+                <th>Counter</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for office in offices %}
+            <tr>
+                <td>{{ office.ref }}</td>
+                <td>{{ office.name }}</td>
+                <td>{{ office.country }}</td>
+                <td>{{ office.state }}</td>
+                <td>{{ office.region }}</td>
+                <td>{{ office.address }}</td>
+                <td>{{ office.counter }}</td>
+            </tr>
+            </label>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Reference</th>
+                <th>Name</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>Address</th>
+                <th>Counter</th>
+            </tr>
+        </tfoot>
+    </table>
+    <!-- end datatable -->
+     <!-- start  MODAL DIALOG-->
+ <!-- Modal -->
+    <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="dialog-enable-notifications">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel"> enable/disable notifications of these offices</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <!--<p id="dialog_list_offices"></p>--> 
+            <div class="mb-3">
+                <label for="text-area-array-offices" class="form-label">List of references, separated by commas(,)</label>
+                <textarea class="form-control" id="text-area-array-offices" rows="3"></textarea>
+            </div>
+            <p id="response_action_notifify">response action</p>
+        </div>
+        <div class="d-flex flex-row mb-3 modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-close-dialog-notify">Close</button>
+            <button type="button" class="btn btn-primary ms-2" id="btn-enable-notify"
+            data-client-id="{{ user.id}}"
+            >Enable </button>
+            <button type="button" class="btn btn-primary " id="btn-disable-notify"
+            data-client-id="{{ user.id}}"
+            >Disable</button>
+        </div>
+        </div>
+    </div>
+    </div>
+    <!-- end MODAL DIALOG -->
+    <!-- 
+    ======================================================================
+    End Dynamic  content for user client
+    ======================================================================
+    -->
+{% endif %}
+{% if user.is_authenticated and user.role == 'manager' %}
+    <!-- 
+    ======================================================================
+    Start Dynamic content for user manager
+    ======================================================================
+    -->
+    <p class="text-success bg-dark text-center">
+        Congratulations, manager! You have successfully joined TicketCounterNotify. 
+    </p>
+    <h1>{{ windows_office.count }}  windows were found </h1>
+    <div class="d-flex justify-content-start align-items-start gap-3">
+        {% for window in windows_office %}
+        <div class="card" style="width: 25rem">
+            <div class="card-body">
+                <p class="display-3 text-primary d-block text-center border border-primary "
+                id="served-tickets{{window.number_window}}"
+                >
+                {{window.number_of_served_tickets}} tickets 
+                </p>
+                <h2 class="card-title" style="font-size:1.8em;">
+                    number window : <span id="number-window{{window.number_window}}">{{window.number_window}}</span>
+                </h2>
+                <p class="h5 text-gray" id="agent-window{{window.number_window}}">Agent ID : {{window.agent_id}}</p>
+                <p class="h5 text-gray" id="office-window{{window.number_window}}">Office Reference : {{window.office_id}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- 
+    ======================================================================
+    end  Dynamic for user manager 
+    ======================================================================
+    -->
+{% endif %}
+{% endblock %}
+
+
+{% block extra_js %}
+    {% if user.is_authenticated and user.role == 'client' %}
+    <!-- 
+    ======================================================================
+    start javscript  for user client
+    ======================================================================
+    -->
+        <script>$('#offices').DataTable();</script>
+        <script>
+            $(document).ready(function(){
+                let selectedOffices = [];
+                let arrayOfficesToSend = []; 
+                let msg_response = ""
+                $("table tbody tr").click(function(){
+                    $(this).toggleClass("selected");
+                    const officeRef = $(this).children(":first").text();
+                    if ($(this).hasClass("selected")) {
+                        selectedOffices.push(officeRef)
+                    } else {
+                        selectedOffices =selectedOffices.filter(function(ref) {
+                            return ref !== officeRef;
+                        })  
+                    }
+                });
+                $("#btn-track-offices").click(function(){
+                    // clear contents of text area and paragraph tags 
+                    $("#text-area-array-offices").val('')
+                    $("#response_action_notifify").text('')
+                    // clear arrayOfficesToSend
+                    arrayOfficesToSend = []
+                    selectedOffices.forEach((element, index, array) => {
+                        if (index === array.length - 1)
+                        {
+                            $("#text-area-array-offices").val(function(i, text) {
+                                return text + element;
+                            });
+                        }
+                        else {
+                            $("#text-area-array-offices").val(function(i, text) {
+                                return text + element + ', ';
+                            });
+                        }
+                        
+                    });
+                    
+                });
+                // click enable notification for selected offices 
+                $( "#btn-enable-notify,#btn-disable-notify").on( "click", function() {
+                    const response_element = $("#response_action_notifify");
+                    response_element.text('');
+                    let textAreaContentArray = $("#text-area-array-offices").val();
+                    textAreaContentArray =  textAreaContentArray.trim();
+                    if (typeof textAreaContentArray === "string" && textAreaContentArray.length === 0) {
+                        msg_response = "empty text area : No offices were selected"
+                        styleResponseTag(response_element,'text-success', 'text-danger', msg_response);
+                        return ;
+                    }
+                    arrayOfficesToSend =  textAreaContentArray.split(',');
+                    if (Array.isArray(arrayOfficesToSend)) {
+                        if (arrayOfficesToSend.length === 0) {
+                            msg_response = "no offices selectetd"
+                            styleResponseTag(response_element,'text-success', 'text-danger', msg_response);
+                            return;
+                        }
+
+                        console.log("offices to send:")
+                        console.log(JSON.stringify(arrayOfficesToSend))
+                        let action = '';
+                        if (this.id === 'btn-enable-notify') {
+                            action = 'enable';
+                        } else if (this.id === 'btn-disable-notify') {
+                            action = 'disable';
+                        }
+                        apply_notification_with_action(this, action, arrayOfficesToSend, response_element);
+                        // call the service the service 
+                    } else {
+                        msg_response = "selectedOffices is not an array";
+                        styleResponseTag(response_element,'text-success', 'text-danger', msg_response);
+                        return;
+                    }
+                } );
+            });    
+        </script>
+    {% endif %}
+    <!-- 
+    ======================================================================
+    end javscript  for user client
+    ======================================================================
+    -->
+    <!-- 
+    ======================================================================
+    start  javscript  for user agent
+    ======================================================================
+    -->
+    {% if user.is_authenticated and user.role == "agent" %}
+        <script src="{% static 'tcn/js/config_key.js' %}" ></script>
+    {% endif %}
+{% endblock %}

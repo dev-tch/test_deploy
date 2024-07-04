@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+<!-- Section: Design Block -->
+<section class="background-radial-gradient overflow-hidden">
+    {% load static %}
+    <link href="{% static 'tcn/css/form.css' %}" rel="stylesheet" />  
+    <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
+        {% if user.is_authenticated and  user.role == 'manager' %}
+        <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'tcn:listAgents' %}'">
+            goback
+        </button>
+        {% else %}
+        <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'tcn:login' %}'">
+            Login
+        </button>
+        {% endif %}
+      <div class="row gx-lg-5 align-items-center mb-5">
+        <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
+            {% if user.is_authenticated and  user.role == 'manager' %}
+                <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
+                manager interface
+                <br />
+                <span style="color: hsl(218, 81%, 75%)">
+                Update  Agent
+                </span>
+                </h1>
+            {% endif %}
+        </div>
+  
+        <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
+          <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
+          <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
+  
+          <div class="card bg-glass">
+            <div class="card-body px-4 py-5 px-md-5">
+                <form id="AgentUpdate" method="post">
+                    {% csrf_token %}
+                <!-- 2 column grid layout with text inputs for the first and last names -->
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline"> 
+                        <input type="text" name="{{ form.first_name.name }}" class="form-control" id="{{ form.first_name.id_for_label }}" 
+                        value="{{ form.first_name.value }}" >
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">first name</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                        <input type="text" name="{{ form.last_name.name }}" class="form-control" id="{{ form.last_name.id_for_label }}" 
+                        value="{{ form.last_name.value }}">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">last name</label>
+                    </div>
+                  </div>
+                </div>
+                <!-- user name -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" name="{{ form.username.name }}" class="form-control" id="{{ form.username.id_for_label }}" 
+                    value="{{ form.username.value }}">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">user name</label>
+                </div>
+                <!-- Email input -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" 
+                  value="{{ form.email.value }}">
+                  <label for="{{ form.email.id_for_label }}" class="form-label">email</label>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.national_id.id_for_label }}" class="form-label">{{ form.national_id.label }}</label>
+                    {{ form.national_id }}
+                </div>
+                <!-- Submit button -->
+                <br/>
+                <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
+                Update agent     
+                </button>
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                    </div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Section: Design Block -->
+{% endblock %}
+

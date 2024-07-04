@@ -1,0 +1,31 @@
+
+{% extends "tcn/base.html" %}
+{% load static %}
+{% block title %}TrackedOffices{% endblock %}
+{% block content %}
+<h1>
+    welcome to tracked offices
+</h1>
+<div class="d-flex justify-content-start align-items-start gap-3">
+    {% for office in list_tracked_offices %}
+    <div class="card" style="width: 25rem">
+        <div class="card-body">
+            <p class="display-3 text-primary d-block text-center border border-primary "
+            id="counter-office{{office.ref}}"
+            >
+            {{office.counter}}
+            </p>
+            <h2 class="card-title" style="font-size:1.8em;">
+                Reference: <span id="reference-office{{office.ref}}">{{office.ref}}</span>
+            </h2>
+            <span class="h5 text-gray">Name: {{office.name}}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block extra_js %}
+ <!-- start include websocket.js -->
+<script src="{% static 'tcn/js/websocket.js' %}"></script>
+  <!-- end include websocket.js -->
+{% endblock %}

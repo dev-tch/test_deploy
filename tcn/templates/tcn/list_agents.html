@@ -1,0 +1,134 @@
+{% extends "tcn/base.html" %}
+
+{% block title %}List Agents{% endblock %}
+
+{% block content %}
+<h1> {{ agent_list.count }} Agents were found </h1>
+<div class="d-flex justify-content-start align-items-start gap-3">
+    {% for agent in agent_list %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+            <h5 class="card-title">{{ agent.role}} {{ agent.agent_id}}</h5>
+            <p class="card-text">
+                information of office agent
+            </p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">username: {{ agent.username }}</li>
+                <li class="list-group-item">first name: {{ agent.first_name }}</li>
+                <li class="list-group-item">last name: {{ agent.last_name }}</li>
+                <li class="list-group-item">email: {{ agent.email }}</li>
+                <li class="list-group-item">national id: {{ agent.national_id }}</li>
+                <li class="list-group-item">office#reference:  {{ agent.office_id }}</li>
+                <li class="list-group-item">office#number of windows: {{ agent.number_of_windows }}</li>
+                <li class="list-group-item">
+                {% if agent.num_window  > 0 %}
+                <div class="alert alert-success" role="alert">
+                    Agent assigned to window {{agent.num_window}}
+                </div>
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    Agent not assigned to any window
+                </div>
+                {% endif %}
+                </li>
+            </ul>
+            <div class="card-body">
+            {% if office.ref == 'guest' %}
+            <p class="text-danger font-weight-bold">change denied for default office!!</p>
+            {% else %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignWindow{{ agent.agent_id }}"
+            onclick="clearOldData()"
+            >
+            Assign to Window
+            </button>
+            
+            <button type="button" class="btn btn btn-outline-warning me-2 mb-2" onclick="updateAgent(this)"
+            data-agent-id="{{ agent.id}}"
+            >
+                update
+            </button>
+            <button type="button" class="btn btn-outline-danger me-2 mb-2" 
+            data-bs-toggle="modal" data-bs-target="#deleteAgent{{ agent.id}}">
+                Delete
+            </button>
+            {% endif %}
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        id="assignWindow{{ agent.agent_id }}"
+        >
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">select window </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select form-select-sm" aria-label="Small select example" id="windowSelect{{ agent.agent_id }}">
+                        <option selected disabled>Select a window</option>
+                        {% load custom_tags %}
+                        {% for i in agent.number_of_windows|range_filter %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <p id="response_assign_window{{ agent.agent_id }}"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"
+                data-agent-id="{{ agent.agent_id}}"
+                data-office-id="{{ agent.office_id }}"
+                onclick="assignAgentToWindow(this)"
+                >Save changes</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- start Modal delete agent -->
+        <!-- Modal -->
+        <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        id="deleteAgent{{ agent.id }}"
+        >
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Do you confirm the deletion of this agent ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p> Agent id   :  {{ agent.id }} </p>
+                    <p> Agent  username :  {{ agent.username }} </p>
+                    <p id="response-delete-agent{{ agent.id }}"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary"
+                data-office-ref="{{ agent.office_id }}"
+                data-agent-id="{{ agent.id}}"
+                onclick="deleteAgent(this)"
+                >
+                Yes
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!--end delete agent -->
+    {% endfor %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    function updateAgent(buttonUpdateAgent) {
+        if (buttonUpdateAgent !== undefined && buttonUpdateAgent !== null) {
+            const agent_id = buttonUpdateAgent.getAttribute('data-agent-id');
+            const updateUrl = `/tcn/manager/agents/${agent_id}/update/`;
+            // Redirect to the update URL directly
+            window.location.href = updateUrl;
+        }
+    }
+</script>
+{% endblock %}
+

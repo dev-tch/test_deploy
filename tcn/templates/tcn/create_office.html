@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+<!-- Section: Design Block -->
+<section class="background-radial-gradient overflow-hidden">
+    {% load static %}
+    <link href="{% static 'tcn/css/form.css' %}" rel="stylesheet" />  
+    <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
+        {% if user.is_authenticated and  user.role == 'manager' %}
+        <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'tcn:listOffices' %}'">
+            goback
+        </button>
+        {% else %}
+        <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'tcn:login' %}'">
+            Login
+        </button>
+        {% endif %}
+      <div class="row gx-lg-5 align-items-center mb-5">
+        <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
+            {% if user.is_authenticated and  user.role == 'manager' %}
+                <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
+                manager interface
+                <br />
+                <span style="color: hsl(218, 81%, 75%)">
+                create new Office
+                </span>
+                </h1>
+            {% endif %}
+        </div>
+  
+        <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
+          <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
+          <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
+  
+          <div class="card bg-glass">
+            <div class="card-body px-4 py-5 px-md-5">
+                <form method="post">
+                    {% csrf_token %}
+                <!-- 2 column grid layout with text inputs for the first and last names -->
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                        
+                        <input type="text" name="{{ form.ref.name }}" class="form-control" id="{{ form.ref.id_for_label }}" >
+                        <label for="{{ form.ref.id_for_label }}" class="form-label">reference</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                        <input type="text" name="{{ form.name.name }}" class="form-control" id="{{ form.name.id_for_label }}" >
+                        <label for="{{ form.name.id_for_label }}" class="form-label">name </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- office country -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" name="{{ form.country.name }}" class="form-control" id="{{ form.country.id_for_label }}" >
+                    <label for="{{ form.country.id_for_label }}" class="form-label">country</label>
+                </div>
+                <!-- office state -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" name="{{ form.state.name }}" class="form-control" id="{{ form.state.id_for_label }}" >
+                  <label for="{{ form.state.id_for_label }}" class="form-label">state</label>
+                </div>
+  
+                <!-- office region  -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" name="{{ form.region.name }}" class="form-control" id="{{ form.region.id_for_label }}" >
+                  <label for="{{ form.region.id_for_label }}" class="form-label">region</label>
+                </div>
+                <!-- office  address -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" name="{{ form.address.name }}" class="form-control" id="{{ form.address.id_for_label }}">
+                    <label for="{{ form.address.id_for_label }}" class="form-label">adress</label>
+                </div>
+                <!-- office  number windows -->
+                <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" name="{{ form.number_of_windows.name }}" class="form-control" id="{{ form.number_of_windows.id_for_label }}">
+                    <label for="{{ form.number_of_windows.id_for_label }}" class="form-label">number of windows</label>
+                </div>
+                <!-- Submit button -->
+                <br/>
+                <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
+                    create office   
+                </button>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if form.errors and not form.non_field_errors %}
+                    <div class="alert alert-danger">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                    </div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Section: Design Block -->
+{% endblock %}
+
+

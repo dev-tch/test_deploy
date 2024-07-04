@@ -1,0 +1,117 @@
+{% extends "tcn/base.html" %}
+
+{% block title %}List Offices{% endblock %}
+
+{% block content %}
+
+<h1 class="text-info bg-dark" >Each logged-in manager is allowed to create one office!!</h1>
+<h2> {{ office_list.count }} Offices were found </h2>
+<div class="d-flex justify-content-start align-items-start gap-3">
+    {% for office in office_list %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+            <h5 class="card-title">reference: {{ office.ref}}</h5>
+            <p class="card-text">
+                {% if office.ref == 'guest' %}
+                default office was created by the system for custom user sign up
+                {% else %}
+                custom office was created by logged-in manager
+                {% endif %} 
+            </p>
+            </div>
+            <ul class="list-group list-group-flush">
+            <li class="list-group-item">name: {{ office.name }}</li>
+            <li class="list-group-item">country: {{ office.country }}</li>
+            <li class="list-group-item">state: {{ office.state }}</li>
+            <li class="list-group-item">region: {{ office.region }}</li>
+            <li class="list-group-item">adress: {{ office.adress }}</li>
+            <li class="list-group-item">number of windows: {{ office.number_of_windows }}</li>
+            <li class="list-group-item">counter: {{ office.counter }}</li>
+            </ul>
+            <div class="card-body">
+            {% if office.ref == 'guest' %}
+            <p class="text-danger font-weight-bold">change denied for default office!!</p>
+            {% else %}
+            <button type="button" class="btn btn-primary" onclick="updateOffice(this)"
+            data-ref-office="{{ office.ref}}"
+            >
+                update
+            </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteOffice{{ office.ref }}">Delete</button>
+            <hr class="mt-1 mb-1"/>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#resetcounters{{ office.ref }}">Reset counters</button>
+            {% endif %}
+            </div>
+        </div>
+        <!-- start Modal delete Office -->
+         <!-- Modal -->
+        <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        id="deleteOffice{{ office.ref }}"
+        >
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Do you confirm the deletion of this office ?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>  Office Reference:  {{ office.ref }} </p>
+                    <p id="response-delete-office{{ office.ref }}"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary"
+                data-office-ref="{{ office.ref }}"
+                onclick="deleteOffice(this)"
+                >
+                Yes
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!--end delete office -->
+         <!-- start Modal reset counters Office -->
+         <!-- Modal -->
+         <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+         id="resetcounters{{ office.ref }}"
+         >
+             <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header">
+                 <h1 class="modal-title fs-5" id="exampleModalLabel">Do you confirm the reset of counters ?</h1>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 </div>
+                 <div class="modal-body">
+                     <p>  counter office will be set to zero</p>
+                     <p>  number of tickets served  by each window wille be set to zero</p>
+                     <p id="response-reset-counters{{ office.ref }}"></p>
+                 </div>
+                 <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                 <button type="button" class="btn btn-primary"
+                 data-office-ref="{{ office.ref }}"
+                 onclick="resetCounters(this)"
+                 >
+                 Yes
+                 </button>
+                 </div>
+             </div>
+             </div>
+         </div>
+         <!--end reset counters office -->
+    {% endfor %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    function updateOffice(buttonUpdateOffice) {
+        if (buttonUpdateOffice !== undefined && buttonUpdateOffice !== null) {
+            const ref_office = buttonUpdateOffice.getAttribute('data-ref-office');
+            const updateUrl = `/tcn/manager/offices/${ref_office}/update/`;
+            // Redirect to the update URL directly
+            window.location.href = updateUrl;
+        }
+    }
+</script>
+{% endblock %}

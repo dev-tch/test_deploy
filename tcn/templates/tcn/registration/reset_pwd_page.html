@@ -1,0 +1,16 @@
+{% extends "tcn/base.html" %}
+{% block title %}reset password{% endblock %}
+{% block content %}
+    <body>
+        <div class="container">
+            <h1>Password Reset</h1>
+            <p>Please enter your email address to receive a link to reset your password.</p>
+            
+            <form method="post" action="{% url 'tcn:password_reset' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Send password reset email</button>
+            </form>
+            <p><a href="{% url 'tcn:login' %}">Back to login</a></p>
+    </div>
+{% endblock %}
