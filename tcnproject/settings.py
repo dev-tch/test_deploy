@@ -70,6 +70,7 @@ ALLOWED_HOSTS = ['test-deploy-3to3.onrender.com']
 INSTALLED_APPS = [
     'tcn',  # Your app,
     'channels', 
+    'corsheaders', # for cors
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -84,11 +85,16 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
      "whitenoise.middleware.WhiteNoiseMiddleware",  #for config whitenose 
     'django.contrib.sessions.middleware.SessionMiddleware',
+     'corsheaders.middleware.CorsMiddleware',  #  for cors
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+# Configure CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'https://test-deploy-3to3.onrender.com',  # Your deployed domain
 ]
 
 ROOT_URLCONF = 'tcnproject.urls'
