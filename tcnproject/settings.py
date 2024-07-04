@@ -93,8 +93,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 # Configure CORS settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://test-deploy-3to3.onrender.com', # for cors
+]
 CORS_ALLOWED_ORIGINS = [
-    'https://test-deploy-3to3.onrender.com',  # Your deployed domain
+    'https://test-deploy-3to3.onrender.com',  # for cors
 ]
 
 ROOT_URLCONF = 'tcnproject.urls'
