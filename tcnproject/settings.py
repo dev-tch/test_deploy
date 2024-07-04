@@ -99,6 +99,21 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = [
     'https://test-deploy-3to3.onrender.com',  # for cors
 ]
+# for cors 
+# Add WebSocket specific headers
+from corsheaders.defaults import default_headers, default_methods
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-Requested-With',
+    'X-CSRFToken',
+]
+
+CORS_ALLOW_METHODS = list(default_methods) + [
+    'GET',
+    'POST',
+    'DELETE'
+    'OPTIONS',
+]
 
 ROOT_URLCONF = 'tcnproject.urls'
 
